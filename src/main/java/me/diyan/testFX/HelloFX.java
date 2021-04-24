@@ -1,6 +1,7 @@
 package me.diyan.testFX;
 import javafx.application.Application;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
@@ -13,8 +14,15 @@ public class HelloFX extends Application {
         String javafxVersion = System.getProperty("javafx.version");
         Label l = new Label("Hello, JavaFX " + javafxVersion + ", running on Java " + javaVersion + ".");
         Scene scene = new Scene(new StackPane(l), 640, 480);
+        stage.setTitle("Diyans Wallet");
         stage.setScene(scene);
         stage.show();
+
+        Button btn = new Button("Test Dido");
+        btn.setOnAction((event) -> System.out.println("Dido Test"));
+        StackPane rootPane = new StackPane();
+        rootPane.getChildren().add(btn);
+        stage.setScene(new Scene(rootPane, 640, 480));
     }
 
     public static void main(String[] args) {
