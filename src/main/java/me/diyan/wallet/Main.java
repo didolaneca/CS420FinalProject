@@ -63,7 +63,7 @@ public class Main extends Application {
         Label note = new Label("Note:");
         GridPane.setConstraints(note, 0, 2);
         TextField noteInput = new TextField();
-        noteInput.setPromptText("Transaction Comments:");
+        noteInput.setPromptText("Transaction Comments");
         GridPane.setConstraints(noteInput, 1, 2);
 
         transactionBtn = new Button("Add a transaction");
