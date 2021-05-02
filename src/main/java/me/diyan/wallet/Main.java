@@ -17,6 +17,7 @@ import me.diyan.wallet.handlers.AddTransactionHandler;
 import me.diyan.wallet.models.Transaction;
 import me.diyan.wallet.models.TransactionDAO;
 import me.diyan.wallet.models.TransactionDAOImpl;
+import me.diyan.wallet.validators.WalletValidator;
 
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -26,27 +27,18 @@ import java.util.List;
 public class Main extends Application {
     Button transactionBtn;
     TransactionDAO transactionDAO;
+    WalletValidator walletValidator;
 
     @Override
     public void init() throws Exception {
         super.init();
         this.transactionDAO = new TransactionDAOImpl();
+        this.walletValidator = new WalletValidator();
     }
 
     @Override
     public void start(Stage primaryStage) throws Exception {
         primaryStage.setTitle("Diyans Wallet");
-
-        transactionBtn = new Button("Add a transaction");
-        //adding event handler to the transactionBtn
-        transactionBtn.setOnAction(event -> {
-            DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
-            List<Transaction> transactionList = new ArrayList<>();
-            transactionList.add(new Transaction(new Date(), 99.99, "Dido Test Note"));
-            transactionList.add(new Transaction(new Date(), 109.99, "Dido Test2 Note"));
-            transactionDAO.saveMultipleTransactions(transactionList);
-            System.out.println("Added Transaction");
-        });
 
         GridPane gridPane = new GridPane();
         gridPane.setPadding(new Insets(10,10,10,10));
@@ -73,6 +65,19 @@ public class Main extends Application {
         noteInput.setPromptText("Transaction Comments:");
         GridPane.setConstraints(noteInput, 1, 2);
 
+        transactionBtn = new Button("Add a transaction");
+        //adding event handler to the transactionBtn
+        transactionBtn.setOnAction(event -> {
+            //validate amount input
+            walletValidator.validateAmount(amountInput);
+            walletValidator.validateDate(dateInput);
+            DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+            List<Transaction> transactionList = new ArrayList<>();
+            transactionList.add(new Transaction(new Date(), 99.99, "Dido Test Note"));
+            transactionList.add(new Transaction(new Date(), 109.99, "Dido Test2 Note"));
+            transactionDAO.saveMultipleTransactions(transactionList);
+            System.out.println("Added Transaction");
+        });
         GridPane.setConstraints(transactionBtn, 1, 3);
 
         gridPane.getChildren().addAll(date, dateInput, amount, amountInput, note, noteInput, transactionBtn);
