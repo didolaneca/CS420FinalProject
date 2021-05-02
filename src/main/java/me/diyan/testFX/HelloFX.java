@@ -21,6 +21,7 @@ public class HelloFX extends Application {
         //Form
         TextField nameInput = new TextField();
         button = new Button("Click me");
+        button.setOnAction(e -> System.out.println(nameInput.getText()));
 
         //Layout
         VBox layout = new VBox(10);
