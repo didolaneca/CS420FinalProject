@@ -1,5 +1,7 @@
 package me.diyan.wallet.models;
 
+import javafx.collections.ObservableList;
+
 import java.util.Date;
 import java.util.List;
 
@@ -13,4 +15,6 @@ public interface TransactionDAO {
     List<Transaction> getTransactionsByDate(Date fromDate, Date untilDate);
     //retunrs a transactions matching a keyword
     List<Transaction> getTransactionsByKeyWord(String keyWord);
+
+    ObservableList<Transaction> loadTransactions();
 }

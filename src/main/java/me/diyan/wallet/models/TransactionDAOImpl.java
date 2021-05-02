@@ -2,6 +2,8 @@ package me.diyan.wallet.models;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
@@ -88,6 +90,15 @@ public class TransactionDAOImpl implements TransactionDAO {
             e.printStackTrace();
         }
         return new ArrayList<>();
+    }
+
+    public ObservableList<Transaction> loadTransactions(){
+        ObservableList<Transaction> transactions = FXCollections.observableArrayList();
+        //add the products
+        transactions.add(new Transaction(new Date(), 899.99, "Dido Test Note - Laptop"));
+        transactions.add(new Transaction(new Date(), 1109.99, "Dido Test2 Note - iPhone"));
+        transactions.add(new Transaction(new Date(), 2999.99, "Dido Test2 Note - New Mac book Pro"));
+        return transactions;
     }
 
 }

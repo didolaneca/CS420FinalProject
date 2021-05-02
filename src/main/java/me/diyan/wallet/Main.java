@@ -1,22 +1,20 @@
 package me.diyan.wallet;
 
 import javafx.application.Application;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import me.diyan.wallet.handlers.AddTransactionHandler;
 import me.diyan.wallet.models.Transaction;
 import me.diyan.wallet.models.TransactionDAO;
 import me.diyan.wallet.models.TransactionDAOImpl;
+import me.diyan.wallet.models.TransactionTable;
 import me.diyan.wallet.validators.WalletValidator;
 
 import java.time.format.DateTimeFormatter;
@@ -28,12 +26,15 @@ public class Main extends Application {
     Button transactionBtn;
     TransactionDAO transactionDAO;
     WalletValidator walletValidator;
+    TableView<Transaction> transactionTableView;
+    TransactionTable transactionTable;
 
     @Override
     public void init() throws Exception {
         super.init();
         this.transactionDAO = new TransactionDAOImpl();
         this.walletValidator = new WalletValidator();
+        TransactionTable transactionTable = new TransactionTable();
     }
 
     @Override
@@ -80,10 +81,13 @@ public class Main extends Application {
         });
         GridPane.setConstraints(transactionBtn, 1, 3);
 
+        this.transactionTableView = TransactionTable.createTransactionTable(this.transactionDAO.loadTransactions());
+        VBox transactionVBox = new VBox();
+        transactionVBox.getChildren().addAll(transactionTableView);
         gridPane.getChildren().addAll(date, dateInput, amount, amountInput, note, noteInput, transactionBtn);
-
+        gridPane.setAlignment(Pos.CENTER);
         //create a Scene
-        Scene scene = new Scene(gridPane, 500, 450);
+        Scene scene = new Scene(gridPane, 1000, 1000);
         //add the scene to the primary stage
         primaryStage.setScene(scene);
         //display to the user
