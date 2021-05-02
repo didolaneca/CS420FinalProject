@@ -1,20 +1,35 @@
 package me.diyan.testFX;
 import javafx.application.Application;
+import javafx.geometry.Insets;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 public class HelloFX extends Application {
+    Stage window;
+    Button button;
 
     @Override
     public void start(Stage stage) {
-        String javaVersion = System.getProperty("java.version");
-        String javafxVersion = System.getProperty("javafx.version");
-        Label l = new Label("Hello, JavaFX " + javafxVersion + ", running on Java " + javaVersion + ".");
-        Scene scene = new Scene(new StackPane(l), 640, 480);
-        stage.setScene(scene);
-        stage.show();
+        window = stage;
+        window.setTitle("#10 Extract and Validate Input");
+
+        //Form
+        TextField nameInput = new TextField();
+        button = new Button("Click me");
+
+        //Layout
+        VBox layout = new VBox(10);
+        layout.setPadding(new Insets(20, 20, 20, 20));
+        layout.getChildren().addAll(nameInput, button);
+
+        Scene scene = new Scene(layout, 300,  250);
+        window.setScene(scene);
+        window.show();
     }
 
     public static void main(String[] args) {
