@@ -21,7 +21,7 @@ public class HelloFX extends Application {
         //Form
         TextField nameInput = new TextField();
         button = new Button("Click me");
-        button.setOnAction(e -> System.out.println(nameInput.getText()));
+        button.setOnAction(e -> isInt(nameInput, nameInput.getText()));
 
         //Layout
         VBox layout = new VBox(10);
@@ -31,6 +31,18 @@ public class HelloFX extends Application {
         Scene scene = new Scene(layout, 300,  250);
         window.setScene(scene);
         window.show();
+    }
+
+    private boolean isInt(TextField textField, String message){
+        try{
+            int age = Integer.parseInt(textField.getText());
+            System.out.println("User is: " + age);
+            return true;
+        }
+        catch (NumberFormatException ex) {
+            System.out.println("Error: " + message + " is not a number");
+            return false;
+        }
     }
 
     public static void main(String[] args) {
