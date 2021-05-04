@@ -7,6 +7,7 @@ import javafx.collections.ObservableList;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -20,20 +21,37 @@ public class TransactionDAOImpl implements TransactionDAO {
     private GsonBuilder gsonBuilder;
     List<Transaction> previousTransactions;
     private static String fileName = "./jsons/transactions.json";
-    File file;
+    ObservableList<Transaction> transactions;
+
+    @Override
+    public ObservableList<Transaction> getTransactions() {
+        return transactions;
+    }
+
+    @Override
+    public ObservableList<Transaction> filterTransactionsByDate(String date) {
+        return null;
+    }
+
+    @Override
+    public ObservableList<Transaction> filterTransactionsByKeyWord(String keyWord) {
+        return null;
+    }
 
     public TransactionDAOImpl(){
         //try to read file if not found create a new one and write to it
         try{
 //            this.file = new File(classLoader.getResource(fileName).getFile());
             this.previousTransactions = readFile(fileName);
+//            this.previousTransactions = new ArrayList<>();// readFile(fileName);
             //if found append to it
-        } catch (FileNotFoundException ex) {
+        } catch (Exception ex) {
             //Create a new file with the first transaction`
             System.out.println("Can't read file/missing file : " + ex.getMessage());
-        } catch (NullPointerException ex) {
-            System.out.println("Can't get filename : " + ex.getMessage());
         }
+//        catch (NullPointerException ex) {
+//            System.out.println("Can't get filename : " + ex.getMessage());
+//        }
 
     }
 
@@ -47,7 +65,7 @@ public class TransactionDAOImpl implements TransactionDAO {
         this.gsonBuilder = new GsonBuilder();
         Gson gson = gsonBuilder.create();
         String transactionJson = gson.toJson(transaction);
-        try (FileWriter fileOutput = new FileWriter("transactions.json")) {
+        try (FileWriter fileOutput = new FileWriter(fileName)) {
             fileOutput.write(transactionJson);
             return true;
         } catch (IOException ex) {
@@ -61,7 +79,7 @@ public class TransactionDAOImpl implements TransactionDAO {
         this.gsonBuilder = new GsonBuilder();
         Gson gson = gsonBuilder.create();
         String transactionJson = gson.toJson(transactionList);
-        try (FileWriter fileOutput = new FileWriter("./jsons/transactions.json")) {
+        try (FileWriter fileOutput = new FileWriter(fileName)) {
             fileOutput.write(transactionJson);
             return true;
         } catch (IOException ex) {
@@ -87,18 +105,25 @@ public class TransactionDAOImpl implements TransactionDAO {
 
             return Arrays.asList(gson.fromJson(bufferedReader, Transaction[].class));
         } catch (IOException e) {
+            System.out.println("Cant read file");
             e.printStackTrace();
         }
         return new ArrayList<>();
     }
 
     public ObservableList<Transaction> loadTransactions(){
-        ObservableList<Transaction> transactions = FXCollections.observableArrayList();
+        transactions = FXCollections.observableArrayList();
         //add the products
-        transactions.add(new Transaction(new Date(), 899.99, "Dido Test Note - Laptop"));
-        transactions.add(new Transaction(new Date(), 1109.99, "Dido Test2 Note - iPhone"));
-        transactions.add(new Transaction(new Date(), 2999.99, "Dido Test2 Note - New Mac book Pro"));
+//        transactions.add(new Transaction(new SimpleDateFormat("MM/dd/YYYY").format(new Date()), 899.99, "Laptop"));
+//        transactions.add(new Transaction(new SimpleDateFormat("MM/dd/YYYY").format(new Date()), 1109.99, "iPhone"));
+//        transactions.add(new Transaction(new SimpleDateFormat("MM/dd/YYYY").format(new Date()), 2999.99, "New Mac book Pro"));
+        transactions.addAll(previousTransactions);
         return transactions;
     }
 
+    @Override
+    public ObservableList<Transaction> addTransaction(Transaction transaction) {
+        transactions.add(transaction);
+        return transactions;
+    }
 }

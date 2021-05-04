@@ -17,4 +17,12 @@ public interface TransactionDAO {
     List<Transaction> getTransactionsByKeyWord(String keyWord);
 
     ObservableList<Transaction> loadTransactions();
+
+    ObservableList<Transaction> addTransaction(Transaction transaction);
+
+    ObservableList<Transaction> getTransactions();
+
+    ObservableList<Transaction> filterTransactionsByDate(String date);
+
+    ObservableList<Transaction> filterTransactionsByKeyWord(String keyWord);
 }
