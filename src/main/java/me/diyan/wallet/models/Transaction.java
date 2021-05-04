@@ -4,27 +4,27 @@ import java.util.Date;
 import java.util.Objects;
 
 public class Transaction {
-    private Date date;
+    private String date;
     private double amount;
     private String note;
 
     public Transaction() {
-        this.date = new Date();
+        this.date = "";
         this.amount = 0.0;
         this.note = "";
     }
 
-    public Transaction(Date date, double amount, String note) {
+    public Transaction(String date, double amount, String note) {
         this.date = date;
         this.amount = amount;
         this.note = note;
     }
 
-    public Date getDate() {
+    public String getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
+    public void setDate(String date) {
         this.date = date;
     }
 
