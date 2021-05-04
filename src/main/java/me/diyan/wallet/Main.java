@@ -23,7 +23,7 @@ import java.util.Date;
 import java.util.List;
 
 public class Main extends Application {
-    Button transactionBtn;
+    Button transactionBtn, searchBtn, showBtn, searchBtnByDate, searchBtnByKeyWord;
     TransactionDAO transactionDAO;
     WalletValidator walletValidator;
     TableView<Transaction> transactionTableView;
@@ -66,33 +66,69 @@ public class Main extends Application {
         noteInput.setPromptText("Transaction Comments");
         GridPane.setConstraints(noteInput, 1, 2);
 
+        searchBtnByDate = new Button("Search transactions by date");
+        GridPane.setConstraints(searchBtnByDate, 2, 0);
+        searchBtnByDate.setOnAction(event -> {
+            if(walletValidator.validateDate(dateInput)){
+                transactionDAO.filterTransactionsByDate(dateInput.getText());
+            } else {
+                System.out.println("Error. Invalid format");
+            }
+        });
+
+        searchBtnByKeyWord = new Button("Search transactions by keyword");
+        GridPane.setConstraints(searchBtnByKeyWord, 2, 2);
+        searchBtnByKeyWord.setOnAction(event -> {
+            transactionDAO.filterTransactionsByKeyWord(noteInput.getText());
+        });
+
+
         transactionBtn = new Button("Add a transaction");
         //adding event handler to the transactionBtn
         transactionBtn.setOnAction(event -> {
-            //validate amount input
-            walletValidator.validateAmount(amountInput);
-            walletValidator.validateDate(dateInput);
-            DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-            List<Transaction> transactionList = new ArrayList<>();
-            transactionList.add(new Transaction(new Date(), 99.99, "Dido Test Note"));
-            transactionList.add(new Transaction(new Date(), 109.99, "Dido Test2 Note"));
-            transactionDAO.saveMultipleTransactions(transactionList);
+//            validate amount input
+            if(walletValidator.validateAmount(amountInput) && walletValidator.validateDate(dateInput)){
+                //add transaction
+                transactionDAO.addTransaction(new Transaction(dateInput.getText(), Double.parseDouble(amountInput.getText()), noteInput.getText()));
+                dateInput.clear();
+                amountInput.clear();
+                noteInput.clear();
+//                transactionDAO.saveTransaction(new Transaction(dateInput.getText(), Double.parseDouble(amountInput.getText()), noteInput.getText()));
+//                DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+//                List<Transaction> transactionList = new ArrayList<>();
+//                transactionList.add(new Transaction("01/01/2011", 99.99, "Air tags"));
+//                transactionList.add(new Transaction("02/02/2022", 199.99, "Air pods"));
+//                transactionList.add(new Transaction("03/03/2023", 1109.99, "Ipad"));
+//                transactionDAO.saveMultipleTransactions(transactionList);
+            } else {
+                System.out.println("Error! Can not add transaction");
+            }
+//            DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+//            List<Transaction> transactionList = new ArrayList<>();
+//            transactionList.add(new Transaction(new Date(), 99.99, "Dido Test Note"));
+//            transactionList.add(new Transaction(new Date(), 109.99, "Dido Test2 Note"));
+//            transactionDAO.saveMultipleTransactions(transactionList);
             System.out.println("Added Transaction");
         });
+        transactionBtn.setAlignment(Pos.CENTER);
         GridPane.setConstraints(transactionBtn, 1, 3);
 
         this.transactionTableView = TransactionTable.createTransactionTable(this.transactionDAO.loadTransactions());
         VBox transactionVBox = new VBox();
         transactionVBox.getChildren().addAll(transactionTableView);
-        gridPane.getChildren().addAll(date, dateInput, amount, amountInput, note, noteInput, transactionBtn);
+        GridPane.setConstraints(transactionVBox, 0,4,3,  3);
+        gridPane.getChildren().addAll(date, dateInput, amount, amountInput, note, noteInput, transactionBtn, searchBtnByDate, searchBtnByKeyWord, transactionVBox);
         gridPane.setAlignment(Pos.CENTER);
+
+        primaryStage.setOnCloseRequest(e -> transactionDAO.saveMultipleTransactions(transactionDAO.getTransactions()));
         //create a Scene
-        Scene scene = new Scene(gridPane, 1000, 1000);
+        Scene topScene = new Scene(gridPane, 1000, 1000);
         //add the scene to the primary stage
-        primaryStage.setScene(scene);
+        primaryStage.setScene(topScene);
         //display to the user
         primaryStage.show();
     }
+
 
     public static void main(String[] args) {
         launch(args);
