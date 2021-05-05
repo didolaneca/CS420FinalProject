@@ -30,7 +30,7 @@ public class TransactionDAOImpl implements TransactionDAO {
     @Override
     public ObservableList<Transaction> filterTransactionsByDate(String date) {
         // we get the date, time to filter the transaction list
-        allTransactions = transactions;
+        allTransactions.setAll( transactions);
         tableFilteredTransactions = FXCollections.observableArrayList();
         filteredTransactions = transactions.stream().filter(
                 transaction -> transaction.getDate().equals(date))
@@ -121,7 +121,9 @@ public class TransactionDAOImpl implements TransactionDAO {
 
     public ObservableList<Transaction> loadTransactions(){
         transactions = FXCollections.observableArrayList();
+        allTransactions = FXCollections.observableArrayList();
         //add the products
+        allTransactions.addAll(previousTransactions);
         transactions.addAll(previousTransactions);
         return transactions;
     }
@@ -129,6 +131,13 @@ public class TransactionDAOImpl implements TransactionDAO {
     @Override
     public ObservableList<Transaction> addTransaction(Transaction transaction) {
         transactions.add(transaction);
+        return transactions;
+    }
+
+    @Override
+    public ObservableList<Transaction> showAllTransactions(){
+        transactions.clear();
+        transactions.addAll(allTransactions);
         return transactions;
     }
 }

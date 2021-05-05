@@ -25,4 +25,6 @@ public interface TransactionDAO {
     ObservableList<Transaction> filterTransactionsByDate(String date);
 
     ObservableList<Transaction> filterTransactionsByKeyWord(String keyWord);
+
+    ObservableList<Transaction> showAllTransactions();
 }

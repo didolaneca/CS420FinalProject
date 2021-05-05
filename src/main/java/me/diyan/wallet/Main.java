@@ -18,7 +18,7 @@ import me.diyan.wallet.models.TransactionTable;
 import me.diyan.wallet.validators.WalletValidator;
 
 public class Main extends Application {
-    Button transactionBtn, searchBtn, showBtn, searchBtnByDate, searchBtnByKeyWord;
+    Button transactionBtn, searchBtn, showAllTransactionsBtn, searchBtnByDate, searchBtnByKeyWord;
     TransactionDAO transactionDAO;
     WalletValidator walletValidator;
     TableView<Transaction> transactionTableView;
@@ -96,11 +96,15 @@ public class Main extends Application {
         transactionBtn.setAlignment(Pos.CENTER);
         GridPane.setConstraints(transactionBtn, 1, 3);
 
+        showAllTransactionsBtn = new Button("Show all transactions");
+        GridPane.setConstraints(showAllTransactionsBtn, 2, 3);
+        showAllTransactionsBtn.setOnAction(event -> transactionDAO.showAllTransactions());
         this.transactionTableView = TransactionTable.createTransactionTable(this.transactionDAO.loadTransactions());
         VBox transactionVBox = new VBox();
         transactionVBox.getChildren().addAll(transactionTableView);
         GridPane.setConstraints(transactionVBox, 0,4,3,  3);
-        gridPane.getChildren().addAll(date, dateInput, amount, amountInput, note, noteInput, transactionBtn, searchBtnByDate, searchBtnByKeyWord, transactionVBox);
+        gridPane.getChildren().addAll(date, dateInput, amount, amountInput, note, noteInput, transactionBtn,
+                searchBtnByDate, searchBtnByKeyWord, transactionVBox, showAllTransactionsBtn);
         gridPane.setAlignment(Pos.CENTER);
 
         primaryStage.setOnCloseRequest(e -> transactionDAO.saveMultipleTransactions(transactionDAO.getTransactions()));
