@@ -30,7 +30,7 @@ public class TransactionDAOImpl implements TransactionDAO {
     @Override
     public ObservableList<Transaction> filterTransactionsByDate(String date) {
         // we get the date, time to filter the transaction list
-        allTransactions.setAll( transactions);
+        allTransactions.setAll(transactions);
         tableFilteredTransactions = FXCollections.observableArrayList();
         filteredTransactions = transactions.stream().filter(
                 transaction -> transaction.getDate().equals(date))
@@ -43,24 +43,24 @@ public class TransactionDAOImpl implements TransactionDAO {
 
     @Override
     public ObservableList<Transaction> filterTransactionsByKeyWord(String keyWord) {
-        return null;
+        allTransactions.setAll(transactions);
+        tableFilteredTransactions = FXCollections.observableArrayList();
+        filteredTransactions = transactions.stream().filter(
+                transaction -> transaction.getNote().contains(keyWord))
+                .collect(Collectors.toList());
+        tableFilteredTransactions.addAll(filteredTransactions);
+        transactions.clear();
+        transactions.addAll(tableFilteredTransactions);
+        return transactions;
     }
 
     public TransactionDAOImpl(){
         //try to read file if not found create a new one and write to it
         try{
-//            this.file = new File(classLoader.getResource(fileName).getFile());
             this.previousTransactions = readFile(fileName);
-//            this.previousTransactions = new ArrayList<>();// readFile(fileName);
-            //if found append to it
         } catch (Exception ex) {
-            //Create a new file with the first transaction`
             System.out.println("Can't read file/missing file : " + ex.getMessage());
         }
-//        catch (NullPointerException ex) {
-//            System.out.println("Can't get filename : " + ex.getMessage());
-//        }
-
     }
 
     @Override
