@@ -6,12 +6,11 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 import java.io.*;
-import java.nio.charset.StandardCharsets;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * This class is used to save communicate with a date source, JSON in our case.
@@ -19,9 +18,9 @@ import java.util.List;
 public class TransactionDAOImpl implements TransactionDAO {
 
     private GsonBuilder gsonBuilder;
-    List<Transaction> previousTransactions;
+    List<Transaction> previousTransactions, filteredTransactions;
     private static String fileName = "./jsons/transactions.json";
-    ObservableList<Transaction> transactions;
+    ObservableList<Transaction> transactions, tableFilteredTransactions, allTransactions;
 
     @Override
     public ObservableList<Transaction> getTransactions() {
@@ -30,7 +29,16 @@ public class TransactionDAOImpl implements TransactionDAO {
 
     @Override
     public ObservableList<Transaction> filterTransactionsByDate(String date) {
-        return null;
+        // we get the date, time to filter the transaction list
+        allTransactions = transactions;
+        tableFilteredTransactions = FXCollections.observableArrayList();
+        filteredTransactions = transactions.stream().filter(
+                transaction -> transaction.getDate().equals(date))
+                .collect(Collectors.toList());
+        tableFilteredTransactions.addAll(filteredTransactions);
+        transactions.clear();
+        transactions.addAll(tableFilteredTransactions);
+        return transactions;
     }
 
     @Override
@@ -114,9 +122,6 @@ public class TransactionDAOImpl implements TransactionDAO {
     public ObservableList<Transaction> loadTransactions(){
         transactions = FXCollections.observableArrayList();
         //add the products
-//        transactions.add(new Transaction(new SimpleDateFormat("MM/dd/YYYY").format(new Date()), 899.99, "Laptop"));
-//        transactions.add(new Transaction(new SimpleDateFormat("MM/dd/YYYY").format(new Date()), 1109.99, "iPhone"));
-//        transactions.add(new Transaction(new SimpleDateFormat("MM/dd/YYYY").format(new Date()), 2999.99, "New Mac book Pro"));
         transactions.addAll(previousTransactions);
         return transactions;
     }

@@ -17,11 +17,6 @@ import me.diyan.wallet.models.TransactionDAOImpl;
 import me.diyan.wallet.models.TransactionTable;
 import me.diyan.wallet.validators.WalletValidator;
 
-import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
 public class Main extends Application {
     Button transactionBtn, searchBtn, showBtn, searchBtnByDate, searchBtnByKeyWord;
     TransactionDAO transactionDAO;
@@ -34,7 +29,6 @@ public class Main extends Application {
         super.init();
         this.transactionDAO = new TransactionDAOImpl();
         this.walletValidator = new WalletValidator();
-        TransactionTable transactionTable = new TransactionTable();
     }
 
     @Override
@@ -71,6 +65,7 @@ public class Main extends Application {
         searchBtnByDate.setOnAction(event -> {
             if(walletValidator.validateDate(dateInput)){
                 transactionDAO.filterTransactionsByDate(dateInput.getText());
+                transactionTableView.refresh();
             } else {
                 System.out.println("Error. Invalid format");
             }
@@ -93,21 +88,9 @@ public class Main extends Application {
                 dateInput.clear();
                 amountInput.clear();
                 noteInput.clear();
-//                transactionDAO.saveTransaction(new Transaction(dateInput.getText(), Double.parseDouble(amountInput.getText()), noteInput.getText()));
-//                DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-//                List<Transaction> transactionList = new ArrayList<>();
-//                transactionList.add(new Transaction("01/01/2011", 99.99, "Air tags"));
-//                transactionList.add(new Transaction("02/02/2022", 199.99, "Air pods"));
-//                transactionList.add(new Transaction("03/03/2023", 1109.99, "Ipad"));
-//                transactionDAO.saveMultipleTransactions(transactionList);
             } else {
                 System.out.println("Error! Can not add transaction");
             }
-//            DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-//            List<Transaction> transactionList = new ArrayList<>();
-//            transactionList.add(new Transaction(new Date(), 99.99, "Dido Test Note"));
-//            transactionList.add(new Transaction(new Date(), 109.99, "Dido Test2 Note"));
-//            transactionDAO.saveMultipleTransactions(transactionList);
             System.out.println("Added Transaction");
         });
         transactionBtn.setAlignment(Pos.CENTER);
