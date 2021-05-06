@@ -65,7 +65,7 @@ public class Main extends Application {
         searchBtnByDate.setOnAction(event -> {
             if(walletValidator.validateDate(dateInput)){
                 transactionDAO.filterTransactionsByDate(dateInput.getText());
-                transactionTableView.refresh();
+                dateInput.clear();
             } else {
                 System.out.println("Error. Invalid format");
             }
@@ -75,6 +75,7 @@ public class Main extends Application {
         GridPane.setConstraints(searchBtnByKeyWord, 2, 2);
         searchBtnByKeyWord.setOnAction(event -> {
             transactionDAO.filterTransactionsByKeyWord(noteInput.getText());
+            noteInput.clear();
         });
 
 
